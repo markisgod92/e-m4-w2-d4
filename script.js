@@ -17,7 +17,6 @@ const apiUrl = `https://striveschool-api.herokuapp.com/books`;
 const cartBtn = document.getElementById("cartBtn");
 const resultsContainer = document.getElementById("results-container");
 const searchInput = document.getElementById("searchInput");
-const searchBtn = document.getElementById("searchBtn");
 const cart = [];
 
 const fetchData = async () => {
@@ -25,8 +24,7 @@ const fetchData = async () => {
         const response = await fetch(apiUrl);
         const data = await response.json();
         displayResults(data);
-        searchInput.addEventListener("input", () => enableSearch(data));
-        searchBtn.addEventListener("click", () => searchBooks(data));
+        searchInput.addEventListener("input", () => searchBooks(data));
     } catch (error) {
         console.log(error);
     }
@@ -163,14 +161,10 @@ const emptyCart = () => {
     document.querySelector("#cartCount").innerText = countCartItems();
 }
 
-const enableSearch = (data) => {
-    searchInput.value.length >= 3 ? searchBtn.disabled = false : searchBtn.disabled = true;
-}
-
 const searchBooks = (data) => {
-    const results = data.filter(item => item.title.toLowerCase().includes(searchInput.value.toLowerCase()));
-    console.log(results);
-    displayResults(results);
-    searchInput.value = "";
-    enableSearch();
+    if (searchInput.value.length >= 3) {
+        displayResults(data.filter(item => item.title.toLowerCase().includes(searchInput.value.toLowerCase())))
+    } else {
+        displayResults(data)
+    }   
 }
